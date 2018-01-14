@@ -9,7 +9,7 @@ import { FontAwesome, Ionicons } from '@expo/vector-icons'
 import { Constants } from 'expo'
 import { submitEntry } from './utils/api'
 import { NavigationActions } from 'react-navigation'
-import { AddDeck } from './components/AddDeck'
+import { AddDeck } from './components/AddDeck.js'
 
 function DeckListItem({item, navigation}){
    const {title, cardCount} = item;
@@ -70,7 +70,16 @@ function ListOfDecks({navigation}){
       ];
    return (
      decks.length>0?      
-      <AddDeck />
+      <View>
+         <FlatList 
+            data={decks} 
+            renderItem={({item})=>{
+               return DeckListItem({item, navigation});
+            }} 
+            keyExtractor={DeckListItem => DeckListItem.id} 
+            
+         />
+      </View>
       :
          <View style={styles.container} >
             <Text style={styles.noDecksAvail}>You have not added any Decks yet!</Text>
@@ -120,7 +129,12 @@ const Tabs = TabNavigator({
          tabBarLabel:'View Decks'
       }
    }, 
-   
+   AddDeck:{
+      screen: AddDeck,
+      navigationOptions:{
+         tabBarLabel:'Add Deck'
+      }
+   }
 });
 const MainNavigator = StackNavigator({
    Home:{
