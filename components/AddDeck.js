@@ -1,33 +1,25 @@
 import React, {Component} from 'react';
 import { TextInput, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
-/*export function AddDeck({navigation}){
-   return (
-      <View style={styles.container} >
-          <Text style={styles.screenTitle} >Add A New Deck</Text>
-          <View style={styles.screenContentView}>
-               <Text>Give your Deck a Name!</Text>
-               <TextInput 
-                  style={styles.textBox} 
-                  maxLength={40}  
-               />
-              <TouchableOpacity onPress={()=>{
-//                     submitEntry();
-                     console.log(this.state.deckName);
-                     navigation.navigate('AddCard');
-                  }}>
-                 <Text style={styles.button}>Add Deck</Text>
-              </TouchableOpacity>
-         </View>
-      </View>
-      
-    );
-}*/
+import {timeToString} from '../utils/helpers';
+import { submitEntry } from '../utils/api'
 
 export default class AddDeck extends Component{
-   
+   constructor(props){
+      super(props)
+      this.state = {
+         deckName:'',
+         cards:[]
+      }
+   }
+   submit(){
+      const entry = this.state;
+      const key = timeToString();
+      submitEntry({entry, key});
+      return key;
+   }
    render(){
       const {navigation} = this.props
-   
+      
       return (
          <View style={styles.container} >
              <Text style={styles.screenTitle} >Add A New Deck</Text>
@@ -35,12 +27,14 @@ export default class AddDeck extends Component{
                   <Text>Give your Deck a Name!</Text>
                   <TextInput 
                      style={styles.textBox} 
-                     maxLength={40}  
+                     maxLength={40} 
+                     value={this.state.deckName} 
+                     onChangeText={(deckName)=>this.setState({deckName})}
                   />
                  <TouchableOpacity onPress={()=>{
-   //                     submitEntry();
+                        let key = this.submit();
                         console.log(this.state.deckName);
-                        navigation.navigate('AddCard');
+                        navigation.navigate('AddCard', {key} );
                      }}>
                     <Text style={styles.button}>Add Deck</Text>
                  </TouchableOpacity>

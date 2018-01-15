@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component}from 'react';
 import { TextInput, StyleSheet, Text, View, Platform, StatusBar, FlatList,TouchableOpacity } from 'react-native'
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
@@ -7,9 +7,9 @@ import { TabNavigator, StackNavigator, DrawerNavigator } from 'react-navigation'
 //import { purple, white } from './utils/colors'
 import { FontAwesome, Ionicons } from '@expo/vector-icons'
 import { Constants } from 'expo'
-import { submitEntry } from './utils/api'
 import { NavigationActions } from 'react-navigation'
-import { AddDeck } from './components/AddDeck.js'
+import  AddDeck  from './components/AddDeck.js'
+import  AddCard  from './components/AddCard.js'
 
 function DeckListItem({item, navigation}){
    const {title, cardCount} = item;
@@ -87,22 +87,7 @@ function ListOfDecks({navigation}){
     );
 }
 
-function AddCard({navigation}){
-   return (
-      <View style={styles.container} >
-         <Text style={styles.screenTitle} >Add a Card</Text>
-          <View style={styles.screenContentView}>
-            <Text>Enter a Question</Text>
-            <TextInput style={styles.textBox} maxLength={40}  />
-             <Text>Enter an Answer</Text>
-            <TextInput  style={styles.textBox}  maxLength={40} />
-            <TouchableOpacity style={styles.container} onPress={()=>navigation.navigate('DeckView')}>
-               <Text style={styles.button}>Add Card</Text>
-            </TouchableOpacity>
-            </View>
-      </View>        
-   );
-}
+
 function ViewDeck({navigation}){
    return (
       <View style={styles.container} >
@@ -121,6 +106,21 @@ function ViewDeck({navigation}){
 }
 function press(){
    console.log('pressed');
+}
+
+export default class App extends React.Component {
+   state = {
+      
+   };   
+  render() {
+    return (
+      <View style={{flex: 1}}>
+          <FlashCardStatusBar/>
+         <MainNavigator />      
+      </View>
+      
+    );
+  }
 }
 const Tabs = TabNavigator({
    Home:{
@@ -148,21 +148,6 @@ const MainNavigator = StackNavigator({
    },
    
 });
-export default class App extends React.Component {
-   state = {
-      
-   };   
-  render() {
-    return (
-      <View style={{flex: 1}}>
-          <FlashCardStatusBar/>
-         <MainNavigator />      
-      </View>
-      
-    );
-  }
-}
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
