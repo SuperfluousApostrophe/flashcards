@@ -14,7 +14,11 @@ export default class AddDeck extends Component{
    submit(){
       const entry = this.state;
       const key = timeToString();
-      submitEntry({entry, key});
+      console.log("Key=>"+key);
+      submitEntry({entry, key}).then(result=>{
+         console.log("entry submitted");
+         console.log(result);
+      });
       return key;
    }
    render(){

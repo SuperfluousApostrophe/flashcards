@@ -10,6 +10,9 @@ import { Constants } from 'expo'
 import { NavigationActions } from 'react-navigation'
 import  AddDeck  from './components/AddDeck.js'
 import  AddCard  from './components/AddCard.js'
+import  DeckView  from './components/DeckView.js'
+
+import { fetchAllDecks } from './utils/api'
 
 function DeckListItem({item, navigation}){
    const {title, cardCount} = item;
@@ -88,22 +91,7 @@ function ListOfDecks({navigation}){
 }
 
 
-function ViewDeck({navigation}){
-   return (
-      <View style={styles.container} >
-         <Text style={styles.deckListTitle} >Deck Name</Text>
-         <Text style={styles.deckListCardCount}>15 Cards</Text>
-         <View style={{flexDirection:'row', alignItems:'center', marginTop:30}}>
-            <TouchableOpacity style={{marginRight:5}} onPress={()=>navigation.navigate('AddCard')}>
-               <Text style={styles.button}>Add Card</Text>
-            </TouchableOpacity>
-             <TouchableOpacity  style={{marginLeft:5}} onPress={press}>
-               <Text style={styles.button}>Quiz Me!</Text>
-            </TouchableOpacity>
-         </View>
-      </View>
-   );
-}
+
 function press(){
    console.log('pressed');
 }
@@ -112,6 +100,7 @@ export default class App extends React.Component {
    state = {
       
    };   
+   
   render() {
     return (
       <View style={{flex: 1}}>
@@ -144,7 +133,7 @@ const MainNavigator = StackNavigator({
       screen: AddCard,
    },
    DeckView:{
-      screen: ViewDeck
+      screen: DeckView
    },
    
 });

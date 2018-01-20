@@ -13,7 +13,7 @@ export default class AddCard extends Component{
          isReady:false
       };
    }
-   componentDidlMount(){
+   componentDidMount(){
       console.log('Component mounted');
       console.log(this.props.navigation.state.params.key);
       fetchSingleDeck(this.props.navigation.state.params.key).then((data)=>{
@@ -35,9 +35,10 @@ export default class AddCard extends Component{
       const deck = this.state.deck;
       const key = navigation.state.params.key;
       const {isReady} = this.state;
-      if(isReady){
+      console.log(isReady);
+      if(!isReady){
           return <AppLoading />
-      }
+      } else {
       return(
          <View style={styles.container} >
             <Text style={styles.screenTitle} >Add a Card to {deck.deckName}</Text>
@@ -55,14 +56,15 @@ export default class AddCard extends Component{
                   onPress={ ()=> {
                         console.log(this.state);
                         this.submit(key);
-                        //navigation.navigate('DeckView')
+                        navigation.navigate('DeckView', { key })
                      }
-                  } >
+                  }  >
                   <Text style={styles.button}>Add Card</Text>
                </TouchableOpacity>
                </View>
          </View>    
       );
+      }
    }
       
 };
