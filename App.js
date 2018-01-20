@@ -11,20 +11,10 @@ import { NavigationActions } from 'react-navigation'
 import  AddDeck  from './components/AddDeck.js'
 import  AddCard  from './components/AddCard.js'
 import  DeckView  from './components/DeckView.js'
+import  DeckList  from './components/DeckList.js'
 
 import { fetchAllDecks } from './utils/api'
 
-function DeckListItem({item, navigation}){
-   const {title, cardCount} = item;
-   return (
-      <View style={styles.deckListItem}>
-         <TouchableOpacity onPress={()=>navigation.navigate('DeckView')}>
-            <Text style={styles.deckListTitle}>{title}</Text>
-            <Text style={styles.deckListCardCount}>{cardCount} Cards</Text>
-         </TouchableOpacity>
-         </View>
-   );
-}
 function FlashCardStatusBar () {
    const backgroundColor ='#d3d3d3';
   return (
@@ -33,63 +23,6 @@ function FlashCardStatusBar () {
     </View>
   )
 }
-function ListOfDecks({navigation}){
-   let decks = [
-         {
-            title: 'Deck 1',
-            cardCount: 15,
-            id:0
-         },
-         {
-            title: 'Deck 2',
-            cardCount: 4,
-            id:1
-         },
-         {
-            title: 'Deck 3',
-            cardCount: 8,
-            id:2
-         },
-         {
-            title: 'Deck 4',
-            cardCount: 15,
-            id:3
-         },
-         {
-            title: 'Deck 5',
-            cardCount: 53,
-            id:4
-         }, 
-         {
-            title: 'Deck 6',
-            cardCount: 15,
-            id:5
-         },
-         {
-            title: 'Deck 7',
-            cardCount: 4,
-            id:6
-         },
-      ];
-   return (
-     decks.length>0?      
-      <View>
-         <FlatList 
-            data={decks} 
-            renderItem={({item})=>{
-               return DeckListItem({item, navigation});
-            }} 
-            keyExtractor={DeckListItem => DeckListItem.id} 
-            
-         />
-      </View>
-      :
-         <View style={styles.container} >
-            <Text style={styles.noDecksAvail}>You have not added any Decks yet!</Text>
-          </View>
-    );
-}
-
 
 
 function press(){
@@ -113,7 +46,7 @@ export default class App extends React.Component {
 }
 const Tabs = TabNavigator({
    Home:{
-      screen: ListOfDecks,
+      screen: DeckList,
       navigationOptions:{
          tabBarLabel:'View Decks'
       }

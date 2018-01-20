@@ -33,12 +33,12 @@ export function fetchSingleDeck(key){
    });
 }
 export function fetchAllDecks() {
-//   console.log('trying to get all decks');
+   console.log('trying to get all decks');
    return AsyncStorage.getItem(FLASHCARD_STORAGE_KEY)
       .then(data=>{
 //         console.log("about to get",data);
          if(data === null) { data = {}; }
-//         console.log(data);
+         console.log(data);
          return JSON.parse(data);
   });
 };
