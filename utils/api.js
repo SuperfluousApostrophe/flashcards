@@ -2,7 +2,7 @@ import { AsyncStorage } from 'react-native'
 
 const FLASHCARD_STORAGE_KEY = 'MEH_FLASHCARD_REACT_NATIVE';
 
-export function submitEntry({ entry, key }) {
+export function createDeck({ entry, key }) {
 //   console.log('trying to add new deck');
   return AsyncStorage.mergeItem(FLASHCARD_STORAGE_KEY, JSON.stringify({
     [key]: entry
@@ -12,6 +12,13 @@ export function submitEntry({ entry, key }) {
 //     console.log(result);
   });
 };
+export function addCardToDeck(key, deck){
+//   console.log(deck, key);
+   let deckObj = {
+      [key]:deck
+   };
+   return AsyncStorage.mergeItem(FLASHCARD_STORAGE_KEY, JSON.stringify(deckObj));
+}
 export function fetchSingleDeck(key){
 //   console.log('trying to fetch single deck');
    return fetchAllDecks().then(data=>{

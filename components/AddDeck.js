@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { TextInput, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import {timeToString} from '../utils/helpers';
-import { submitEntry } from '../utils/api'
+import { createDeck } from '../utils/api'
 
 export default class AddDeck extends Component{
    constructor(props){
@@ -15,7 +15,7 @@ export default class AddDeck extends Component{
       const entry = this.state;
       const key = timeToString();
       console.log("Key=>"+key);
-      submitEntry({entry, key}).then(result=>{
+      createDeck({entry, key}).then(result=>{
          console.log("entry submitted");
          console.log(result);
       });

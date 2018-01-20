@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { TextInput, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import { fetchSingleDeck } from '../utils/api'
 import { AppLoading} from 'expo'
+import { addCardToDeck } from '../utils/api'
 
 export default class AddCard extends Component{
    constructor(props){
@@ -29,6 +30,7 @@ export default class AddCard extends Component{
       deck.cards.push(card);
       console.log(deck);
       //now merge
+      addCardToDeck(deckId, deck).then();
    }
    render(){
       const {navigation} = this.props;
