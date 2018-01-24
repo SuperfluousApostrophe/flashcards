@@ -1,28 +1,42 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, BackHandler } from 'react-native'
+import { NavigationActions } from 'react-navigation'
 import { fetchSingleDeck } from '../utils/api'
 import { AppLoading} from 'expo'
 
 
 export default class ViewDeck extends Component{
+   static navigationOptions = ({ navigation }) => ({
+      title: 'Viewing Deck',
+   });
    constructor(props){
       super(props)
       this.state = {
-        deck:{deckName:'', cards:[]},
+        deck:{deckName:'', id:'', cards:[]},
         isReady: false, 
         key:''
       }
    }
    componentDidMount(){
-      console.log('Component mounted');
+//      BackHandler.addEventListener('hardwareBackPress',()=>{
+//         const resetAction = NavigationActions.reset({
+//            index: 0,
+//            actions: [
+//              NavigationActions.navigate({ routeName: 'Home'})
+//            ]
+//          });
+//      
+//         this.props.navigation.dispatch(resetAction);
+//      });
+//      console.log('Component mounted');
       const key = this.props.navigation.state.params.key;
-      console.log(key);
+//      console.log(key);
 //      this.setState({key:key});
 //      console.log(this.state.key);
       fetchSingleDeck(key).then((data)=>{
 //         deck = data;
-         console.log('fetched deck');
-         console.log(data);
+//         console.log('fetched deck');
+//         console.log(data);
          this.setState({deck:data, isReady:true, key:key});
       });
    }

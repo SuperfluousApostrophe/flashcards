@@ -38,7 +38,7 @@ export function fetchAllDecks() {
       .then(data=>{
 //         console.log("about to get",data);
          if(data === null) { data = {}; }
-         console.log(data);
+//         console.log(data);
          return JSON.parse(data);
   });
 };

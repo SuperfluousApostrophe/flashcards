@@ -4,20 +4,30 @@ import {timeToString} from '../utils/helpers';
 import { createDeck } from '../utils/api'
 
 export default class AddDeck extends Component{
+   static navigationOptions = ({ navigation }) => ({
+      title: `Add a New Deck`,
+   });
+
    constructor(props){
       super(props)
       this.state = {
          deckName:'',
-         cards:[]
+         cards:[], 
+         id:'',
+         saved:false,
+         
       }
    }
    submit(){
       const entry = this.state;
       const key = timeToString();
-      console.log("Key=>"+key);
+//      console.log("Key=>"+key);
+      entry.id = key;
       createDeck({entry, key}).then(result=>{
-         console.log("entry submitted");
-         console.log(result);
+         
+         this.setState({saved:true});
+//         console.log("entry submitted");
+//         console.log(result);
       });
       return key;
    }
@@ -26,7 +36,6 @@ export default class AddDeck extends Component{
       
       return (
          <View style={styles.container} >
-             <Text style={styles.screenTitle} >Add A New Deck</Text>
              <View style={styles.screenContentView}>
                   <Text>Give your Deck a Name!</Text>
                   <TextInput 
@@ -36,11 +45,15 @@ export default class AddDeck extends Component{
                      onChangeText={(deckName)=>this.setState({deckName})}
                   />
                  <TouchableOpacity onPress={()=>{
-                        let key = this.submit();
-                        console.log(this.state.deckName);
-                        navigation.navigate('AddCard', {key} );
+                        if(!this.state.saved){
+                           let key = this.submit();
+                           console.log(this.state.deckName);
+   //                        navigation.navigate('Home', {key} );
+                        } else {
+                           console.log('already saved this deck')
+                        }
                      }}>
-                    <Text style={styles.button}>Add Deck</Text>
+                    <Text style={styles.button}>{this.state.saved?"Saved":"Save"}</Text>
                  </TouchableOpacity>
             </View>
          </View>

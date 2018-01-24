@@ -44,23 +44,23 @@ export default class App extends React.Component {
     );
   }
 }
-const Tabs = TabNavigator({
-   Home:{
-      screen: DeckList,
-      navigationOptions:{
-         tabBarLabel:'View Decks'
-      }
-   }, 
-   AddDeck:{
-      screen: AddDeck,
-      navigationOptions:{
-         tabBarLabel:'Add Deck'
-      }
-   }
-});
+//const Tabs = TabNavigator({
+//   Home:{
+//      screen: DeckList,
+//      navigationOptions:{
+//         tabBarLabel:'View Decks'
+//      }
+//   }, 
+//   AddDeck:{
+//      screen: AddDeck,
+//      navigationOptions:{
+//         tabBarLabel:'Add Deck'
+//      }
+//   }
+//});
 const MainNavigator = StackNavigator({
    Home:{
-      screen: Tabs
+      screen: DeckList
    },
    AddCard:{
       screen: AddCard,
@@ -68,6 +68,12 @@ const MainNavigator = StackNavigator({
    DeckView:{
       screen: DeckView
    },
+   AddDeck:{
+      screen: AddDeck,
+      navigationOptions:{
+         tabBarLabel:'Add Deck'
+      },
+   }
    
 });
 const styles = StyleSheet.create({

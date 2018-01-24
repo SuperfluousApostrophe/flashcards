@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { TextInput, StyleSheet, Text, View, TouchableOpacity, FlatList } from 'react-native'
+import { TextInput, StyleSheet, Text, View, TouchableOpacity, FlatList, Button} from 'react-native'
 import {timeToString} from '../utils/helpers';
 import { fetchAllDecks } from '../utils/api'
 
@@ -10,16 +10,22 @@ export default class ListOfDecks extends Component{
          decks:[]
       }
    }
+   static navigationOptions = ({ navigation }) => {
+   console.log(navigation);
+   return {
+      title: 'Deck List',
+      headerRight: (<Button title='Add Deck' onPress={()=>(navigation.navigate('AddDeck'))}/>)
+   }};
    componentDidMount(){
-      console.log('Component mounted');
+//      console.log('Component mounted');
       fetchAllDecks().then(data=>{
          let deckList = [];
          Object.entries(data).forEach(([key, value]) => {
             deckList.push(value);
          });
-         console.log('got data', deckList);
+//         console.log('got data', deckList);
          this.setState({decks:deckList});
-         console.log(this.state);
+//         console.log(this.state);
       });
    } 
    render(){
@@ -106,13 +112,13 @@ const styles = StyleSheet.create({
 });
 
 function DeckListItem({item, navigation}){
-   console.log(item);
-}
-   const {title, cardCount} = item;
+//   console.log(item);
+   const {deckName, cards, id} = item;
+   let cardCount = cards.length;
    return (
       <View style={styles.deckListItem}>
-         <TouchableOpacity onPress={()=>navigation.navigate('DeckView')}>
-            <Text style={styles.deckListTitle}>{title}</Text>
+         <TouchableOpacity onPress={()=>navigation.navigate('DeckView',  { key:id })}>
+            <Text style={styles.deckListTitle}>{deckName}</Text>
             <Text style={styles.deckListCardCount}>{cardCount} Cards</Text>
          </TouchableOpacity>
          </View>
