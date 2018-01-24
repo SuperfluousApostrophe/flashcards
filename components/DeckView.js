@@ -52,7 +52,7 @@ export default class ViewDeck extends Component{
                <Text style={styles.deckListCardCount}>{deck.cards.length} Cards</Text>
                <View style={{flexDirection:'row', alignItems:'center', marginTop:30}}>
                   <TouchableOpacity style={{marginRight:5}} onPress={()=>navigation.navigate('AddCard', {key})}>
-                     <Text style={styles.button}>Add Card</Text>
+                     <Text style={styles.button}>Add Cards</Text>
                   </TouchableOpacity>
                    <TouchableOpacity  style={{marginLeft:5}} >
                      <Text style={styles.button}>Quiz Me!</Text>

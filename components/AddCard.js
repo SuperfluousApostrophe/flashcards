@@ -15,7 +15,8 @@ export default class AddCard extends Component{
          question:'',
          answer:'',
          isReady:false,
-         saved:false,
+         cardAddedMsg:''
+//         saved:false,
       };
    }
    componentDidMount(){
@@ -35,14 +36,13 @@ export default class AddCard extends Component{
 //      console.log(deck);
       //now merge
       addCardToDeck(deckId, deck).then(()=>{
-          this.setState({saved:true});
+          this.setState({question:'', answer:'', cardAddedMsg:'Card Added! Add Another?'});
       });
    }
    render(){
       const {navigation} = this.props;
-      const deck = this.state.deck;
       const key = navigation.state.params.key;
-      const {isReady} = this.state;
+      const {isReady, cardAddedMsg, deck} = this.state;
 //      console.log(isReady);
       if(!isReady){
           return <AppLoading />
@@ -60,18 +60,15 @@ export default class AddCard extends Component{
                 <Text>Enter an Answer</Text>
                <TextInput  style={styles.textBox}  maxLength={40} value={this.state.answer} 
                   onChangeText={(answer)=>this.setState({answer})} />
+               <Text>{cardAddedMsg}</Text>
                <TouchableOpacity style={styles.container} 
                   onPress={ ()=> {
-                        if(!this.state.saved){
                            console.log(this.state);
                            this.submit(key);
    //                        navigation.navigate('DeckView', { key })
-                        } else {
-                           console.log('already saved this card');
-                        }
                      }
                   }  >
-                  <Text style={styles.button}>{this.state.saved?"Added":"Add Card"}</Text>
+                  <Text style={styles.button}>Add Card</Text>
                </TouchableOpacity>
                </View>
          </View>    
