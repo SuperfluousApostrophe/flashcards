@@ -1,58 +1,37 @@
 import React, {Component} from 'react';
+import { connect } from 'react-redux'
 import { StyleSheet, Text, View, TouchableOpacity, BackHandler } from 'react-native'
 import { NavigationActions } from 'react-navigation'
 import { fetchSingleDeck } from '../utils/api'
 import { AppLoading} from 'expo'
 
 
-export default class ViewDeck extends Component{
+class ViewDeck extends Component{
    static navigationOptions = ({ navigation }) => ({
       title: 'Viewing Deck',
    });
    constructor(props){
       super(props)
       this.state = {
-        deck:{deckName:'', id:'', cards:[]},
         isReady: false, 
-        key:''
       }
    }
    componentDidMount(){
-//      BackHandler.addEventListener('hardwareBackPress',()=>{
-//         const resetAction = NavigationActions.reset({
-//            index: 0,
-//            actions: [
-//              NavigationActions.navigate({ routeName: 'Home'})
-//            ]
-//          });
-//      
-//         this.props.navigation.dispatch(resetAction);
-//      });
-//      console.log('Component mounted');
-      const key = this.props.navigation.state.params.key;
-//      console.log(key);
-//      this.setState({key:key});
-//      console.log(this.state.key);
-      fetchSingleDeck(key).then((data)=>{
-//         deck = data;
-//         console.log('fetched deck');
-//         console.log(data);
-         this.setState({deck:data, isReady:true, key:key});
-      });
+       this.setState({isReady:true,});
    }
    render(){
-      const {deck, isReady, key} = this.state;
-      const navigation = this.props.navigation;
+      const {isReady, } = this.state;
+      const {navigation, selectedDeck, deckId} = this.props;
       if(!isReady){
          return <AppLoading />
       } else {
          return (
             <View style={styles.container} >
-               <Text style={styles.deckListTitle} >{deck.deckName}</Text>
-               <Text style={styles.deckListCardCount}>{deck.cards.length} Cards</Text>
+               <Text style={styles.deckListTitle} >{selectedDeck.deckName}</Text>
+               <Text style={styles.deckListCardCount}>{selectedDeck.cards.length} Cards</Text>
                <View style={{flexDirection:'row', alignItems:'center', marginTop:30}}>
-                  <TouchableOpacity style={{marginRight:5}} onPress={()=>navigation.navigate('AddCard', {key})}>
-                     <Text style={styles.button}>Add Cards</Text>
+                  <TouchableOpacity style={{marginRight:5}} onPress={()=>navigation.navigate('AddCard', {key:deckId})}>
+                     <Text style={styles.button}>Add Card</Text>
                   </TouchableOpacity>
                    <TouchableOpacity  style={{marginLeft:5}} >
                      <Text style={styles.button}>Quiz Me!</Text>
@@ -63,6 +42,18 @@ export default class ViewDeck extends Component{
       }
    }
 }
+
+function mapStateToProps (decks, { navigation }) {
+   return {
+      selectedDeck: decks[navigation.state.params.key],
+      deckId: navigation.state.params.key 
+   };
+}
+
+export default connect(
+  mapStateToProps,
+)(ViewDeck)
+
 
 const styles = StyleSheet.create({
   container: {

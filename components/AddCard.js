@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
+import { connect } from 'react-redux'
 import { TextInput, StyleSheet, Text, View, TouchableOpacity, BackHandler } from 'react-native'
-import { fetchSingleDeck } from '../utils/api'
 import { AppLoading} from 'expo'
 import { addCardToDeck } from '../utils/api'
+import {addCard} from '../actions/actions.js'
 
-export default class AddCard extends Component{
+class AddCard extends Component{
    static navigationOptions = ({ navigation }) => ({
       title: `Add a Card`,
    });
@@ -14,36 +15,25 @@ export default class AddCard extends Component{
          deck:{},
          question:'',
          answer:'',
-         isReady:false,
-         cardAddedMsg:''
-//         saved:false,
+         isReady:false
       };
    }
    componentDidMount(){
-//      console.log('Component mounted');
-//      console.log(this.props.navigation.state.params.key);
-      fetchSingleDeck(this.props.navigation.state.params.key).then((data)=>{
-//         deck = data;
-//         console.log('fetched deck');
-//         console.log(data);
-         this.setState({deck:data, isReady:true});
-      });
+      const {selectedDeck, deckId} = this.props;
+      this.setState({deck:selectedDeck, isReady:true});
    }
    submit(deckId){
       let card = {question:this.state.question, answer:this.state.answer};
-      let deck = this.state.deck;
+      let deck = this.props.selectedDeck;
       deck.cards.push(card);
-//      console.log(deck);
-      //now merge
-      addCardToDeck(deckId, deck).then(()=>{
-          this.setState({question:'', answer:'', cardAddedMsg:'Card Added! Add Another?'});
+      addCardToDeck(deckId, deck).then((result)=>{
+         addCard({[deckId]:deck});
+         this.props.navigation.goBack();
       });
    }
    render(){
-      const {navigation} = this.props;
-      const key = navigation.state.params.key;
-      const {isReady, cardAddedMsg, deck} = this.state;
-//      console.log(isReady);
+      const {navigation, deckId} = this.props;
+      const {isReady, deck} = this.state;
       if(!isReady){
           return <AppLoading />
       } else {
@@ -60,12 +50,10 @@ export default class AddCard extends Component{
                 <Text>Enter an Answer</Text>
                <TextInput  style={styles.textBox}  maxLength={40} value={this.state.answer} 
                   onChangeText={(answer)=>this.setState({answer})} />
-               <Text>{cardAddedMsg}</Text>
                <TouchableOpacity style={styles.container} 
                   onPress={ ()=> {
-                           console.log(this.state);
-                           this.submit(key);
-   //                        navigation.navigate('DeckView', { key })
+//                           console.log(this.state);
+                        this.submit(deckId);
                      }
                   }  >
                   <Text style={styles.button}>Add Card</Text>
@@ -77,6 +65,29 @@ export default class AddCard extends Component{
    }
       
 };
+
+function mapStateToProps (decks, { navigation }) {
+   return {
+      decks,
+      selectedDeck: decks[navigation.state.params.key],
+      deckId: navigation.state.params.key 
+   };
+}
+
+function mapDispatchToProps (dispatch, { navigation }) {
+
+  return {
+      addCard:(data) => dispatch(addCard(data)),
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(AddCard)
+
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

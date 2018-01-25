@@ -1,22 +1,18 @@
 import React, {Component}from 'react';
-import { TextInput, StyleSheet, Text, View, Platform, StatusBar, FlatList,TouchableOpacity } from 'react-native'
+import { StyleSheet, View, StatusBar } from 'react-native'
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
-//import reducer from './reducers'
-import { TabNavigator, StackNavigator, DrawerNavigator } from 'react-navigation'
-//import { purple, white } from './utils/colors'
+import reducer from './reducers/reducers.js'
+import { StackNavigator } from 'react-navigation'
 import { FontAwesome, Ionicons } from '@expo/vector-icons'
 import { Constants } from 'expo'
-import { NavigationActions } from 'react-navigation'
 import  AddDeck  from './components/AddDeck.js'
 import  AddCard  from './components/AddCard.js'
 import  DeckView  from './components/DeckView.js'
 import  DeckList  from './components/DeckList.js'
 
-import { fetchAllDecks } from './utils/api'
-
 function FlashCardStatusBar () {
-   const backgroundColor ='#d3d3d3';
+  const backgroundColor ='#d3d3d3';
   return (
     <View style={{ height: Constants.statusBarHeight }}>
       <StatusBar translucent backgroundColor={backgroundColor} barStyle="light-content"  />
@@ -24,40 +20,22 @@ function FlashCardStatusBar () {
   )
 }
 
-
-function press(){
-   console.log('pressed');
-}
-
 export default class App extends React.Component {
-   state = {
-      
-   };   
-   
+  componentDidMount() {
+    //setLocalNotification()
+  }
   render() {
     return (
-      <View style={{flex: 1}}>
-          <FlashCardStatusBar/>
-         <MainNavigator />      
-      </View>
-      
-    );
+      <Provider store={createStore(reducer)}>
+         <View style={{flex: 1}}>
+         <FlashCardStatusBar/>
+           <MainNavigator />      
+        </View>
+      </Provider>
+    )
   }
 }
-//const Tabs = TabNavigator({
-//   Home:{
-//      screen: DeckList,
-//      navigationOptions:{
-//         tabBarLabel:'View Decks'
-//      }
-//   }, 
-//   AddDeck:{
-//      screen: AddDeck,
-//      navigationOptions:{
-//         tabBarLabel:'Add Deck'
-//      }
-//   }
-//});
+
 const MainNavigator = StackNavigator({
    Home:{
       screen: DeckList

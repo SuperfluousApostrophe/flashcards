@@ -1,41 +1,39 @@
 import React, {Component} from 'react';
+import { connect } from 'react-redux'
 import { TextInput, StyleSheet, Text, View, TouchableOpacity, FlatList, Button} from 'react-native'
 import {timeToString} from '../utils/helpers';
 import { fetchAllDecks } from '../utils/api'
+import {receiveDecks} from '../actions/actions.js';
 
-export default class ListOfDecks extends Component{
+class ListOfDecks extends Component{
    constructor(props){
       super(props)
       this.state = {
-         decks:[]
       }
    }
    static navigationOptions = ({ navigation }) => {
-   console.log(navigation);
    return {
       title: 'Deck List',
       headerRight: (<Button title='Add Deck' onPress={()=>(navigation.navigate('AddDeck'))}/>)
    }};
    componentDidMount(){
-//      console.log('Component mounted');
-      fetchAllDecks().then(data=>{
-         let deckList = [];
-         Object.entries(data).forEach(([key, value]) => {
-            deckList.push(value);
-         });
-//         console.log('got data', deckList);
-         this.setState({decks:deckList});
-//         console.log(this.state);
+      const { receiveDecks, } = this.props;
+      fetchAllDecks().then((data)=>{
+         receiveDecks(data);
       });
    } 
    render(){
-      const {decks} = this.state;
-      const {navigation} = this.props;
+      const {decks, navigation} = this.props;
+      let deckList = [];
+         Object.entries(decks).forEach(([key, value]) => {
+            deckList.push(value);
+         });
+      deckList.reverse();
       return (
-         decks.length>0?      
+         Object.keys(decks).length>0?      
             <View>
                <FlatList 
-                  data={decks} 
+                  data={deckList} 
                   renderItem={({item})=>{
                      return DeckListItem({item, navigation});
                   }} 
@@ -50,6 +48,23 @@ export default class ListOfDecks extends Component{
        );
    }
 }
+
+function mapStateToProps (decks) {
+  return {
+    decks
+  }
+}
+function mapDispatchToProps (dispatch, { navigation }) {
+  return {
+      receiveDecks:(data) => dispatch(receiveDecks(data))
+  }
+}
+
+
+export default connect(
+  mapStateToProps,mapDispatchToProps
+)(ListOfDecks)
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
+import { connect } from 'react-redux'
 import { TextInput, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import {timeToString} from '../utils/helpers';
 import { createDeck } from '../utils/api'
+import { addDeck } from '../actions/actions.js'
 
-export default class AddDeck extends Component{
+class AddDeck extends Component{
    static navigationOptions = ({ navigation }) => ({
       title: `Add a New Deck`,
    });
@@ -14,20 +16,21 @@ export default class AddDeck extends Component{
          deckName:'',
          cards:[], 
          id:'',
-         saved:false,
          
       }
    }
+   componentDidMount(){
+      console.log(this.props);
+   }
    submit(){
+      const { addDeck, navigation } = this.props;
+      
       const entry = this.state;
       const key = timeToString();
-//      console.log("Key=>"+key);
       entry.id = key;
       createDeck({entry, key}).then(result=>{
-         
-         this.setState({saved:true});
-//         console.log("entry submitted");
-//         console.log(result);
+         addDeck({[key]:entry});
+         this.props.navigation.goBack();
       });
       return key;
    }
@@ -45,13 +48,8 @@ export default class AddDeck extends Component{
                      onChangeText={(deckName)=>this.setState({deckName})}
                   />
                  <TouchableOpacity onPress={()=>{
-                        if(!this.state.saved){
-                           let key = this.submit();
-                           console.log(this.state.deckName);
-   //                        navigation.navigate('Home', {key} );
-                        } else {
-                           console.log('already saved this deck')
-                        }
+                        this.submit();
+                        console.log(this.state.deckName);
                      }}>
                     <Text style={styles.button}>{this.state.saved?"Saved":"Save"}</Text>
                  </TouchableOpacity>
@@ -61,6 +59,26 @@ export default class AddDeck extends Component{
     )
    }
 }
+
+function mapStateToProps (state, { navigation }) {
+   return {};
+}
+
+function mapDispatchToProps (dispatch, { navigation }) {
+
+  return {
+      addDeck:(data) => dispatch(addDeck(data))
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(AddDeck)
+
+
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
