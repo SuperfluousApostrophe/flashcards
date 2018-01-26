@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { TextInput, StyleSheet, Text, View, TouchableOpacity, BackHandler } from 'react-native'
 import { AppLoading} from 'expo'
 import { addCardToDeck } from '../utils/api'
-import {addCard} from '../actions/actions.js'
+import {addCard, dumpCards} from '../actions/actions.js'
 
 class AddCard extends Component{
    static navigationOptions = ({ navigation }) => ({
@@ -19,16 +19,15 @@ class AddCard extends Component{
       };
    }
    componentDidMount(){
-      const {selectedDeck, deckId} = this.props;
+      const {selectedDeck, deckId, } = this.props;
       this.setState({deck:selectedDeck, isReady:true});
    }
    submit(deckId){
+       const {navigation, selectedDeck, addCard } = this.props;
       let card = {question:this.state.question, answer:this.state.answer};
-      let deck = this.props.selectedDeck;
-      deck.cards.push(card);
-      addCardToDeck(deckId, deck).then((result)=>{
-         addCard({[deckId]:deck});
-         this.props.navigation.goBack();
+      addCardToDeck(deckId, selectedDeck, card).then((result)=>{
+         addCard({id:deckId, card:card});
+         navigation.goBack();
       });
    }
    render(){
@@ -78,6 +77,7 @@ function mapDispatchToProps (dispatch, { navigation }) {
 
   return {
       addCard:(data) => dispatch(addCard(data)),
+      dumpCards:(data) => dispatch(dumpCards(data)),
   }
 }
 

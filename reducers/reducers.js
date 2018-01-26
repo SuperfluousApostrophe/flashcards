@@ -1,7 +1,7 @@
-import {RECEIVE_DECKS, ADD_DECK, ADD_CARD} from '../actions/actions.js';
+import {RECEIVE_DECKS, ADD_DECK, ADD_CARD, } from '../actions/actions.js';
 
 function entries (state = {}, action) {
-   const {deck, card} = action;
+   const {deck,id, card} = action;
    switch (action.type) {
       case RECEIVE_DECKS :
          return {
@@ -15,8 +15,13 @@ function entries (state = {}, action) {
          }
       case ADD_CARD :
          return {
-           ...state,
-           ...deck
+            ...state,
+            [id]:{
+               ...state[id], 
+               cards:[
+                  ...state[id].cards.concat(card)
+               ]
+            }
          }
       default :
          return state;

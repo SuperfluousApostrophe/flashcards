@@ -12,10 +12,10 @@ export function createDeck({ entry, key }) {
 //     console.log(result);
   });
 };
-export function addCardToDeck(key, deck){
+export function addCardToDeck(key, deck, card){
 //   console.log(deck, key);
    let deckObj = {
-      [key]:deck
+      [key]:{cards:[...deck.cards, card]}
    };
    return AsyncStorage.mergeItem(FLASHCARD_STORAGE_KEY, JSON.stringify(deckObj));
 }

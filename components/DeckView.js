@@ -22,6 +22,7 @@ class ViewDeck extends Component{
    render(){
       const {isReady, } = this.state;
       const {navigation, selectedDeck, deckId} = this.props;
+//      console.log(`SelectedDeck (${selectedDeck.cards.length})`,selectedDeck.cards);
       if(!isReady){
          return <AppLoading />
       } else {
