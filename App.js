@@ -10,6 +10,8 @@ import  AddDeck  from './components/AddDeck.js'
 import  AddCard  from './components/AddCard.js'
 import  DeckView  from './components/DeckView.js'
 import  DeckList  from './components/DeckList.js'
+import  Quiz  from './components/Quiz.js'
+import { setLocalNotification } from './utils/helpers'
 
 function FlashCardStatusBar () {
   const backgroundColor ='#d3d3d3';
@@ -22,7 +24,7 @@ function FlashCardStatusBar () {
 
 export default class App extends React.Component {
   componentDidMount() {
-    //setLocalNotification()
+    setLocalNotification()
   }
   render() {
     return (
@@ -51,7 +53,11 @@ const MainNavigator = StackNavigator({
       navigationOptions:{
          tabBarLabel:'Add Deck'
       },
+   },
+   Quiz:{
+      screen:Quiz
    }
+   
    
 });
 const styles = StyleSheet.create({
