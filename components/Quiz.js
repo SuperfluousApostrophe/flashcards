@@ -11,14 +11,34 @@ class Quiz extends Component{
       this.state = {
          correct:0,
          total:0, 
-         currentCard:0
+         currentCard:0,
+         quizComplete: false
       }
+       this.scoreCard = this.scoreCard.bind(this);
+       this.resetQuiz = this.resetQuiz.bind(this);
    }
    incrementCard(){
-      console.log(this.state);
-//      let newIndex = this.state.currentCard;
-//      console.log(newIndex);
-//      this.setState({currentCard:newIndex});
+      console.log(this.state.currentCard);
+      let newIndex = this.state.currentCard;  
+      newIndex++;
+      if(newIndex<this.state.total){
+         this.setState({currentCard:newIndex});
+      } else {
+        this.setState({quizComplete:true});
+      }
+   }
+   scoreCard(result){
+      if(result){
+         this.setState({correct:(this.state.correct+1)});
+      }
+      this.incrementCard();
+   }
+   resetQuiz(){
+      this.setState({
+         correct:0,
+         currentCard:0,
+         quizComplete: false
+      });
    }
    componentDidMount(){
       const {selectedDeck} = this.props;
@@ -26,13 +46,17 @@ class Quiz extends Component{
       
    }
    render(){
-      const {selectedDeck} = this.props;
-//      console.log(`SelectedDeck (${selectedDeck.cards.length})`,selectedDeck.cards);
+      const {selectedDeck, navigation} = this.props;
+      const {quizComplete} = this.state;
+      const goBack = navigation.goBack;
          return (
             <View style={styles.container} >
                <Text style={styles.deckListTitle} >Quizzing: {selectedDeck.deckName}</Text>
-               <QuizItem card={selectedDeck.cards[this.state.currentCard]} increment={this.incrementCard}/>
-               <Results correct={this.state.correct} total={this.state.total} />
+               {!quizComplete?
+                  <QuizItem card={selectedDeck.cards[this.state.currentCard]} scoreCard={this.scoreCard}/>
+               :
+                  <Results correct={this.state.correct} total={this.state.total} resetQuiz={this.resetQuiz} goBack={goBack}/>
+               }
             </View>
          );
    }
@@ -49,41 +73,68 @@ export default connect(
 )(Quiz)
 
 
-function Results({correct, total}){
+function Results({correct, total, resetQuiz, goBack}){
    return (
       <View>
-         <Text style={styles.deckListTitle} >Results: You got {correct}/{total} Correct!</Text>
-         <View style={{flexDirection:'row', alignItems:'center', marginTop:30}}>
-            <TouchableOpacity style={{marginRight:5}} >
+          <View style={{flexDirection:'row', textAlign:'center', alignItems:'center', marginTop:30}}>
+            <Text>Results: You got {correct}/{total} Correct!</Text>
+         </View>
+         <View style={{flexDirection:'row', textAlign:'center', alignItems:'center', marginTop:30}}>
+            <TouchableOpacity style={{marginRight:5}} onPress={()=>{resetQuiz()}} >
                <Text style={styles.button}>Start Over</Text>
             </TouchableOpacity>
-             <TouchableOpacity  style={{marginLeft:5}} >
+             <TouchableOpacity  style={{marginLeft:5}} onPress={()=>{goBack()}} >
                <Text style={styles.button}>Back to Deck</Text>
             </TouchableOpacity>
          </View>   
       </View>
    );
 }
-function QuizItem({card, increment}){
-   return (
-      <View >
+
+class QuizItem extends Component{
+   constructor(props){
+      super(props)
+      this.state = {
+         showAnswer:false
+      }
+   }
+   showAnswer(){
+      this.setState({
+         showAnswer:true
+      });
+   }
+   hideAnswer(){
+      this.setState({
+         showAnswer:false
+      });
+   }
+   render(){
+      
+      const {card, scoreCard} = this.props;
+      const {showAnswer} = this.state;
+      return (
+         <View >
             <Text style={styles.deckListTitle}>{card.question}</Text>
-            <Text style={styles.deckListCardCount}>{card.answer}</Text>
-         <View style={{flexDirection:'row', alignItems:'center', marginTop:30}}>
-               <TouchableOpacity>
+            {showAnswer?
+               <Text style={styles.deckListCardCount}>{card.answer}</Text>
+            :
+               <TouchableOpacity onPress={()=>{this.showAnswer()}} >
                   <Text style={styles.button}>Show Answer</Text>
                </TouchableOpacity>
+            }
+            <View style={{flexDirection:'row', alignItems:'center', marginTop:30}}>
+                 <TouchableOpacity style={{marginRight:5}} onPress={()=>{this.hideAnswer(),scoreCard(true)}} >
+                    <Text style={styles.button}>Correct</Text>
+                 </TouchableOpacity>
+                  <TouchableOpacity  style={{marginLeft:5}} onPress={()=>{this.hideAnswer(),scoreCard(false)}}>
+                    <Text style={styles.button}>Incorrect</Text>
+                 </TouchableOpacity>
+              </View>
          </View>
-          <View style={{flexDirection:'row', alignItems:'center', marginTop:30}}>
-               <TouchableOpacity style={{marginRight:5}} onPress={()=>increment()} >
-                  <Text style={styles.button}>Correct</Text>
-               </TouchableOpacity>
-                <TouchableOpacity  style={{marginLeft:5}} >
-                  <Text style={styles.button}>Incorrect</Text>
-               </TouchableOpacity>
-            </View>
-      </View>
-   );
+      );
+   
+
+   }
 }
 
 
@@ -134,7 +185,9 @@ const styles = StyleSheet.create({
      paddingBottom:15,
      marginBottom:15,
      justifyContent: 'center',
-     backgroundColor:'#d3d3d3'
+     backgroundColor:'#d3d3d3',
+     textAlign:'center'
+     
    },
    textBox:{
       width:'80%',
