@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux'
 import { StyleSheet, Text, View, TouchableOpacity, BackHandler } from 'react-native'
+import { clearLocalNotification, setLocalNotification } from '../utils/helpers'
 
 class Quiz extends Component{
    static navigationOptions = ({ navigation }) => ({
@@ -24,7 +25,9 @@ class Quiz extends Component{
       if(newIndex<this.state.total){
          this.setState({currentCard:newIndex});
       } else {
-        this.setState({quizComplete:true});
+         /* Quiz is complete! */
+         clearLocalNotification().then(setLocalNotification);
+         this.setState({quizComplete:true});
       }
    }
    scoreCard(result){
@@ -52,8 +55,12 @@ class Quiz extends Component{
          return (
             <View style={styles.container} >
                <Text style={styles.deckListTitle} >Quizzing: {selectedDeck.deckName}</Text>
+               
                {!quizComplete?
-                  <QuizItem card={selectedDeck.cards[this.state.currentCard]} scoreCard={this.scoreCard}/>
+                  <View style={styles.container} >
+                     <Text style={{}} >{(this.state.total-this.state.currentCard)} Cards To Go</Text>
+                     <QuizItem card={selectedDeck.cards[this.state.currentCard]} scoreCard={this.scoreCard}/>
+                  </View>
                :
                   <Results correct={this.state.correct} total={this.state.total} resetQuiz={this.resetQuiz} goBack={goBack}/>
                }
@@ -76,10 +83,10 @@ export default connect(
 function Results({correct, total, resetQuiz, goBack}){
    return (
       <View>
-          <View style={{flexDirection:'row', textAlign:'center', alignItems:'center', marginTop:30}}>
-            <Text>Results: You got {correct}/{total} Correct!</Text>
+          <View style={{flexDirection:'row',alignItems:'center', marginTop:30}}>
+            <Text style={{ textAlign:'center' }}>Results: You got {correct}/{total} Correct!</Text>
          </View>
-         <View style={{flexDirection:'row', textAlign:'center', alignItems:'center', marginTop:30}}>
+         <View style={{flexDirection:'row', alignItems:'center', marginTop:30}}>
             <TouchableOpacity style={{marginRight:5}} onPress={()=>{resetQuiz()}} >
                <Text style={styles.button}>Start Over</Text>
             </TouchableOpacity>
