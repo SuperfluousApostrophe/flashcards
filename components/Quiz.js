@@ -19,7 +19,6 @@ class Quiz extends Component{
        this.resetQuiz = this.resetQuiz.bind(this);
    }
    incrementCard(){
-      console.log(this.state.currentCard);
       let newIndex = this.state.currentCard;  
       newIndex++;
       if(newIndex<this.state.total){
