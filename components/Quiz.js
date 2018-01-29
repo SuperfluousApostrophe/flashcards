@@ -120,7 +120,7 @@ class QuizItem extends Component{
       const {showAnswer} = this.state;
       return (
          <View >
-            <Text style={styles.deckListTitle}>{card.question}</Text>
+            <Text style={styles.questionTitle}>{card.question}</Text>
             {showAnswer?
                <Text style={styles.deckListCardCount}>{card.answer}</Text>
             :
@@ -151,6 +151,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
 //    justifyContent: 'center',
   },
+  questionTitle:{
+      fontSize:30,
+      textAlign: 'center',
+   },
   screenContentView: {
       alignItems: 'center',
     justifyContent: 'center',

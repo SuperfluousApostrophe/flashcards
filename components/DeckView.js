@@ -34,9 +34,11 @@ class ViewDeck extends Component{
                   <TouchableOpacity style={{marginRight:5}} onPress={()=>navigation.navigate('AddCard', {key:deckId})}>
                      <Text style={styles.button}>Add Card</Text>
                   </TouchableOpacity>
+                  {selectedDeck.cards.length >0 &&
                    <TouchableOpacity  style={{marginLeft:5}} onPress={()=>navigation.navigate('Quiz', {key:deckId})}>
                      <Text style={styles.button}>Quiz Me!</Text>
                   </TouchableOpacity>
+                  }
                </View>
             </View>
          );
