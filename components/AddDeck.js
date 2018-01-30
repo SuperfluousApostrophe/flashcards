@@ -4,6 +4,7 @@ import { TextInput, StyleSheet, Text, View, TouchableOpacity } from 'react-nativ
 import {timeToString} from '../utils/helpers';
 import { createDeck } from '../utils/api'
 import { addDeck } from '../actions/actions.js'
+import { NavigationActions } from 'react-navigation'
 
 class AddDeck extends Component{
    static navigationOptions = ({ navigation }) => ({
@@ -19,9 +20,6 @@ class AddDeck extends Component{
          
       }
    }
-   componentDidMount(){
-      console.log(this.props);
-   }
    submit(){
       const { addDeck, navigation } = this.props;
       
@@ -30,10 +28,22 @@ class AddDeck extends Component{
       entry.id = key;
       createDeck({entry, key}).then(result=>{
          addDeck({[key]:entry});
-         this.props.navigation.goBack();
+//         this.props.navigation.goBack();
+         const resetAction = NavigationActions.reset({
+            index: 1,
+            actions: [
+               NavigationActions.navigate({ routeName: 'Home'}),
+               NavigationActions.navigate({routeName:'DeckView', params:{key:entry.id }})
+            ]
+         })
+         navigation.dispatch(resetAction)
+
+
+
       });
       return key;
    }
+   
    render(){
       const {navigation} = this.props
       
